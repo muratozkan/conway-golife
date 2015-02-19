@@ -8,6 +8,7 @@ import scala.collection.immutable._
 trait World {
   def size: (Int, Int)
   def getCell: Pos => Option[Cell]
+  def getAllCells: List[Cell]
   def getNeighbors: Pos => List[Cell]
   def getNeighborsPos: Pos => List[Pos]
   def isValid(pos: Pos): Boolean
@@ -27,6 +28,8 @@ object GameWorld extends World {
   override def size: (Int, Int) = (InitialMap.size, InitialMap(0).size)
 
   override def getCell: Pos => Option[Cell] = cellFunction(InitialMap)
+
+  override def getAllCells: List[Cell] = InitialMap.flatten.toList
 
   override def getNeighbors: Pos => List[Cell] = neighborFunction(InitialMap)
 

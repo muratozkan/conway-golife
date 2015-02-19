@@ -8,6 +8,6 @@ import akka.actor.ActorSystem
 object ApplicationMain extends App {
   val system = ActorSystem("LifeSystem")
   val gameActor = system.actorOf(GameActor.props, "gameActor")
-  gameActor ! GameActor.Initialize
+  gameActor ! GameActor.Init
   system.awaitTermination()
 }
