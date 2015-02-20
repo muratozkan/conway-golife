@@ -11,9 +11,5 @@ object ApplicationMain extends App {
   val gameActor = system.actorOf(GameActor.props, "game")
   gameActor ! GameActor.Init
 
-  Thread.sleep(5000)
-
-  gameActor ! GameActor.End
-
   system.awaitTermination()
 }

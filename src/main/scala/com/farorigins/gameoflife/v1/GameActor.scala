@@ -34,9 +34,9 @@ class GameActor extends Actor with ActorLogging with Domain {
         gui.Paint.repaint()
 
         if (cellStates.count(c => c.status) > 0)
-          context.system.scheduler.scheduleOnce(1000 millis, self, Tick)
+          context.system.scheduler.scheduleOnce(500 millis, self, Tick)
         else
-          context.system.scheduler.scheduleOnce(1000 millis, self, End)
+          context.system.scheduler.scheduleOnce(500 millis, self, End)
 
         cellStates.clear()
       }

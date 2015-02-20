@@ -26,7 +26,12 @@ class CellActor(pos: Pos, var state: Boolean) extends Actor with ActorLogging wi
       neighborStates.update(np, ns)
 
       if (!sent && neighborStates.size == neighborNames.length) {
-        state = neighborStates.count(ns => ns._2) >= 3
+        state = neighborStates.count(ns => ns._2) match {
+          case n if n > 3 => false
+          case 3 => true
+          case 2 => state
+          case n if n < 2 => false
+        }
         context.parent ! GameActor.State(pos, state)
 
         sent = true
