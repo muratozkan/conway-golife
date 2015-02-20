@@ -1,8 +1,11 @@
 package com.farorigins.gameoflife.v1
 
 /**
- * Created by murat.ozkan on 18/02/15.
+ * Created by murat.ozkan on 20/02/15.
  */
+trait Domain {
+  def cellName(pos: Pos) = s"cell-${pos.row}-${pos.col}"
+}
 
 case class Pos(row: Int, col: Int) {
 
@@ -16,6 +19,8 @@ case class Pos(row: Int, col: Int) {
 }
 
 object Pos {
+  val Empty     = Pos(0, 0)
+
   val Up        = Pos(-1, 0)
   val Down      = Pos(1, 0)
   val Left      = Pos(0, -1)
@@ -27,3 +32,6 @@ object Pos {
 
   val Neighbors = List(Up, UpLeft, Left, DownLeft, Down, DownRight, Right, UpRight)
 }
+
+case class Cell(pos: Pos, status: Boolean)
+

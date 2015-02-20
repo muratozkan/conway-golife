@@ -7,7 +7,13 @@ import akka.actor.ActorSystem
  */
 object ApplicationMain extends App {
   val system = ActorSystem("LifeSystem")
-  val gameActor = system.actorOf(GameActor.props, "gameActor")
+
+  val gameActor = system.actorOf(GameActor.props, "game")
   gameActor ! GameActor.Init
+
+  Thread.sleep(5000)
+
+  gameActor ! GameActor.End
+
   system.awaitTermination()
 }

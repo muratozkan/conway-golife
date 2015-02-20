@@ -17,13 +17,10 @@ trait World {
 object GameWorld extends World {
 
   private val MapString =
-    """x-------------------
-      |x-------------------
-      |x-------------------
-      |x-------------------
-      |--------------------
-      |--------------------
-    """.stripMargin
+    """x---------
+      |x---------
+      |x---------
+      |x---------""".stripMargin
 
   override def size: (Int, Int) = (InitialMap.size, InitialMap(0).size)
 
@@ -50,7 +47,7 @@ object GameWorld extends World {
   private lazy val InitialMap: Vector[Vector[Cell]] = {
     MapString.split("\n").zipWithIndex.map {
       case(line, rowIndex) => line.toCharArray.zipWithIndex.map {
-        case(char, colIndex) => Cell(rowIndex, colIndex, char == 'x')
+        case(char, colIndex) => Cell(Pos(rowIndex, colIndex), char == 'x')
       }.toVector
     }.toVector
   }
