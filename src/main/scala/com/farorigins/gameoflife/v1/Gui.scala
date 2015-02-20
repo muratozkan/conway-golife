@@ -4,7 +4,7 @@ package com.farorigins.gameoflife.v1
  * Created by murat.ozkan on 19/02/15.
  */
 import javax.swing.{JFrame, JComponent}
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.immutable.List
 import java.awt.{Color, Graphics}
 
 class Gui {
@@ -18,10 +18,10 @@ class Gui {
   }
 
   object Paint extends JComponent {
-    var coordinates = new ArrayBuffer[(Int, Int, Int, Int)]
+    var gameWorld: List[Cell] = List()
 
-    def updateCoordinates(newCoordinates: ArrayBuffer[(Int, Int, Int, Int)]): Unit = {
-      coordinates = newCoordinates
+    def setWorld(world: List[Cell]): Unit = {
+      gameWorld = world
       repaint()
     }
 
@@ -30,14 +30,13 @@ class Gui {
       graphics.fillRect(0, 0, this.getWidth, this.getHeight)
 
       graphics.setColor(Color.GREEN)
-      coordinates.foreach { cell =>
-        graphics.fillRect(
-          cell._1,
-          cell._2,
-          cell._3,
-          cell._4
-        )
+      gameWorld filter(cell => cell.status) foreach { cell =>
+        graphics.fillRect(cell.pos.col * Gui.CellSize, cell.pos.row * Gui.CellSize, Gui.CellSize, Gui.CellSize)
       }
     }
   }
+}
+
+object Gui {
+  val CellSize: Int = 20
 }

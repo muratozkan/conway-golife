@@ -17,10 +17,11 @@ trait World {
 object GameWorld extends World {
 
   private val MapString =
-    """x---------
-      |x---------
-      |x---------
-      |x---------""".stripMargin
+    """----------
+      |-------x--
+      |-xx-------
+      |--x---xxx-
+      |----------""".stripMargin
 
   override def size: (Int, Int) = (InitialMap.size, InitialMap(0).size)
 
