@@ -23,12 +23,6 @@ object GameWorld extends World {
       |--xx-----------
       |---------------
       |---------------
-      |---------------
-      |---------------
-      |---------------
-      |---------------
-      |---------------
-      |---------------
       |---------------""".stripMargin
 
   override def size: (Int, Int) = (InitialMap.size, InitialMap(0).size)
