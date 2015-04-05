@@ -2,8 +2,7 @@ package com.farorigins.gameoflife.v1
 
 import collection.immutable.List
 import collection.{mutable => m}
-import akka.actor.{Props, ActorLogging, Actor}
-import com.farorigins.gameoflife.v1.CellActor._
+import akka.actor.{ ActorLogging, Props, Actor}
 
 /**
  * Created by murat.ozkan on 18/02/15.
@@ -14,14 +13,11 @@ class CellActor(pos: Pos, var state: Boolean) extends Actor with ActorLogging wi
 
   var sent: Boolean = false
   override def receive = {
-    case Tick => {
-      // Send state to neighbor
-      // log.info("Sending state...")
+    case Tick =>
       sent = false
       neighborStates.clear()
       neighborNames.foreach(p => context.actorSelection(s"../$p") ! State(pos, state))
-    }
-    case State(np: Pos, ns: Boolean) => {
+    case State(np: Pos, ns: Boolean) =>
       // Received state update from neighbor
       neighborStates.update(np, ns)
 
@@ -32,20 +28,16 @@ class CellActor(pos: Pos, var state: Boolean) extends Actor with ActorLogging wi
           case 2 => state
           case n if n < 2 => false
         }
-        context.parent ! GameActor.State(pos, state)
+        context.parent ! State(pos, state)
 
         sent = true
       }
-    }
     case End =>
-      log.info(s"DUMP: $sent ${neighborStates.size}")
+      if (neighborStates.size != neighborNames.length)
+        log.info(s"DUMP: $sent $neighborStates ")
   }
 }
 
 object CellActor {
-  case object Tick
-  case object End
-  case class State(pos: Pos, state: Boolean)
-
   def props(pos: Pos, state: Boolean): Props = Props(classOf[CellActor], pos, state).withDispatcher("golife-dispatcher")
 }

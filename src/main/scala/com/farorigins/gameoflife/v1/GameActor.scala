@@ -1,7 +1,6 @@
 package com.farorigins.gameoflife.v1
 
 import akka.actor._
-import com.farorigins.gameoflife.v1.GameActor._
 
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -26,7 +25,7 @@ class GameActor extends Actor with ActorLogging with Domain {
 
       context.system.scheduler.scheduleOnce(1000 millis, self, Tick)
     case End =>
-      context.system.shutdown()
+      context.actorSelection("cell-*-*") ! End
     case State(p: Pos, s: Boolean) =>
       cellStates += Cell(p, s)
       if (cellStates.size == GameWorld.getAllCells.length) {
@@ -41,17 +40,18 @@ class GameActor extends Actor with ActorLogging with Domain {
         cellStates.clear()
       }
     case Tick =>
-      context.actorSelection("cell-*-*") ! CellActor.Tick
+      context.actorSelection("cell-*-*") ! Tick
       log.info("Completed sending TICK message")
+
     case _ => log.warning("Unknown Message Received")
   }
 }
 
 object GameActor {
-  case object Init
-  case object End
-  case object Tick
-  case class State(pos: Pos, state: Boolean)
-
-  val props = Props[GameActor]
+  lazy val props = Props[GameActor].withDispatcher("golife-dispatcher")
 }
+
+case object Init
+case object End
+case object Tick
+case class State(pos: Pos, state: Boolean)
