@@ -1,11 +1,12 @@
-package com.farorigins.gameoflife.v1
+package com.farorigins.gameoflife
 
 /**
  * Created by murat.ozkan on 19/02/15.
  */
-import javax.swing.{JFrame, JComponent}
-import scala.collection.immutable.List
 import java.awt.{Color, Graphics}
+import javax.swing.{JComponent, JFrame}
+
+import scala.collection.immutable.List
 
 class Gui {
 

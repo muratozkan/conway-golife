@@ -1,4 +1,4 @@
-package com.farorigins.gameoflife.v1
+package com.farorigins.gameoflife
 
 import scala.collection.immutable._
 

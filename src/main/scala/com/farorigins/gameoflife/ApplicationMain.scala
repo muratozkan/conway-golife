@@ -1,8 +1,9 @@
-package com.farorigins.gameoflife.v1
+package com.farorigins.gameoflife
 
 import akka.actor.ActorSystem
-import scala.concurrent.duration._
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 /**
  * Created by murat.ozkan on 18/02/15.

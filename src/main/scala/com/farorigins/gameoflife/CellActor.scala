@@ -1,8 +1,9 @@
-package com.farorigins.gameoflife.v1
+package com.farorigins.gameoflife
 
-import collection.immutable.List
-import collection.{mutable => m}
-import akka.actor.{ ActorLogging, Props, Actor}
+import akka.actor.{Actor, ActorLogging, Props}
+
+import scala.collection.immutable.List
+import scala.collection.{mutable => m}
 
 /**
  * Created by murat.ozkan on 18/02/15.

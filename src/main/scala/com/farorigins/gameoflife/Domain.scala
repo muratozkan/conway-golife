@@ -1,4 +1,4 @@
-package com.farorigins.gameoflife.v1
+package com.farorigins.gameoflife
 
 /**
  * Created by murat.ozkan on 20/02/15.
