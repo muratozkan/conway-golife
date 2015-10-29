@@ -66,7 +66,7 @@ object GameWorld extends World {
 
   private def neighborFunction(cells: Vector[Vector[Cell]]): Pos => List[Cell] = {
     (pos: Pos) => {
-        getNeighborsPos(pos).map(p => getCell(p)).flatten.toList
+        getNeighborsPos(pos).flatMap(p => getCell(p))
     }
   }
 }

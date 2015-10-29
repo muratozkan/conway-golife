@@ -1,6 +1,8 @@
 package com.farorigins.gameoflife.v1
 
 import akka.actor._
+import akka.event.LoggingReceive
+import com.farorigins.gameoflife.v1.UIActor.{Render, ShowUI}
 
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -11,31 +13,29 @@ import scala.concurrent.ExecutionContext.Implicits.global
  */
 class GameActor extends Actor with ActorLogging with Domain {
   val cellStates: mutable.MutableList[Cell] = mutable.MutableList()
-  val gui = new Gui()
 
-  override def receive = {
+  val uiActor = context.actorOf(UIActor.props, "ui")
+
+  override def receive = LoggingReceive {
     case Init =>
       val size = GameWorld.size
       log.info(s"Initializing game ... World Size: ${size._1}x${size._2}")
-      gui.show(size._1 * Gui.CellSize, size._2 * Gui.CellSize)
-      gui.Paint.setWorld(GameWorld.getAllCells)
-      gui.Paint.repaint()
+
+      uiActor ! ShowUI(size._1, size._2, GameWorld.getAllCells)
 
       GameWorld.getAllCells.foreach(c => context.actorOf(CellActor.props(c.pos, c.status), cellName(c.pos)))
 
       context.system.scheduler.scheduleOnce(1000 millis, self, Tick)
-    case End =>
-      context.actorSelection("cell-*-*") ! End
     case State(p: Pos, s: Boolean) =>
       cellStates += Cell(p, s)
       if (cellStates.size == GameWorld.getAllCells.length) {
-        gui.Paint.setWorld(cellStates.toList)
-        gui.Paint.repaint()
+
+        uiActor ! Render(cellStates.toList)
 
         if (cellStates.count(c => c.status) > 0)
           context.system.scheduler.scheduleOnce(500 millis, self, Tick)
         else
-          context.system.scheduler.scheduleOnce(500 millis, self, End)
+          self ! PoisonPill
 
         cellStates.clear()
       }
@@ -45,9 +45,14 @@ class GameActor extends Actor with ActorLogging with Domain {
 
     case _ => log.warning("Unknown Message Received")
   }
+
+  override def postStop() = {
+    context.system.terminate()
+  }
 }
 
-object GameActor {
+
+  object GameActor {
   lazy val props = Props[GameActor].withDispatcher("golife-dispatcher")
 }
 
