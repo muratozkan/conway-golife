@@ -8,7 +8,7 @@ import akka.actor.{PoisonPill, ActorLogging, Props, Actor}
  * Created by murat.ozkan on 18/02/15.
  */
 class CellActor(pos: Pos, var state: Boolean) extends Actor with ActorLogging with Domain {
-  val neighborNames: List[String] = Pos.Neighbors.map(p => p + pos).filter(p => GameWorld.isValid(p)).map(p => cellName(p))
+  val neighborNames: List[String] =  GameWorld.getNeighborsPos(pos).map(p => cellName(p))
   val neighborStates: m.Map[Pos, Boolean] = m.Map()
 
   var sent: Boolean = false
@@ -18,17 +18,13 @@ class CellActor(pos: Pos, var state: Boolean) extends Actor with ActorLogging wi
       sent = false
       neighborStates.clear()
       neighborNames.foreach(p => context.actorSelection(s"../$p") ! State(pos, state))
-    case State(np: Pos, ns: Boolean) =>
+    case State(p, s) =>
       // Received state update from neighbor
-      neighborStates.update(np, ns)
+      neighborStates.update(p, s)
 
       if (!sent && neighborStates.size == neighborNames.length) {
-        state = neighborStates.count(ns => ns._2) match {
-          case n if n > 3 => false
-          case 3 => true
-          case 2 => state
-          case n if n < 2 => false
-        }
+        state = GameWorld.nextState(state, neighborNames.length, neighborStates.count(_._2))
+
         context.parent ! State(pos, state)
 
         sent = true
