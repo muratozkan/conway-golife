@@ -68,6 +68,19 @@ class WorldSpec extends WordSpec with Matchers with TypeCheckedTripleEquals with
         nextStateActive shouldBe false
       }
 
+      "two neighbors are active should be current state" in {
+        val nextStateInactive = GameWorld.nextState(state = false, neighborCount, 2)
+        val nextStateActive = GameWorld.nextState(state = true, neighborCount, 2)
+
+        nextStateInactive shouldBe false
+        nextStateActive shouldBe true
+      }
+
+      "three neighbors active should be active" in {
+        val nextState = GameWorld.nextState(state = false, neighborCount, 3)
+
+        nextState shouldBe true
+      }
     }
 
   }

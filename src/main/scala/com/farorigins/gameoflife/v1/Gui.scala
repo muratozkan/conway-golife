@@ -18,7 +18,8 @@ class Gui {
 
     window.foreach(w => {
       w.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-      w.setBounds(0, 0, width, height)
+      w.setSize(width, height + Gui.CellSize)
+      w.setResizable(true)
       w.getContentPane.add(painter)
       w.setVisible(true)
     })
